@@ -1,0 +1,36 @@
+services:
+  backend:
+    container_name: nodejs_container
+    build:
+      context: ./
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test123
+      POSTGRES_DB: mydb
+      # PORT: 8000
+      # DATABASE_URL: postgresql://postgres:test123@db:5432/mydb
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    container_name: postgres_container
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test123
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
